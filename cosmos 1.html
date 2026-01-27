@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theory of Wormholes - Amit Pattanaik</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts for Academic Look -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --academic-serif: "EB Garamond", serif;
+        --ui-sans: "Inter", system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        font-family: var(--ui-sans);
+        background-color: #fafaf9; /* Stone 50 */
+        color: #1c1917; /* Stone 900 */
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      .academic-title {
+        font-family: var(--academic-serif);
+        font-variant-ligatures: common-ligatures;
+      }
+
+      .chart-container {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 500px;
+        }
+      }
+
+      .math-font {
+        font-family: "Times New Roman", Times, serif;
+        font-style: italic;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fafaf9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d6d3d1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a8a29e;
+      }
+
+      #wormhole3d {
+        width: 100%;
+        height: 100%;
+      }
+
+      .section-heading {
+        font-family: var(--academic-serif);
+        letter-spacing: -0.01em;
+      }
+
+      .theory-card {
+        transition: all 0.3s ease;
+      }
+      .theory-card:hover {
+        border-color: #ea580c;
+        background-color: #fff;
+      }
+
+      /* Fix for math block visibility on small screens */
+      .math-scroll {
+        scrollbar-width: thin;
+        -ms-overflow-style: none;
+      }
+      .math-scroll::-webkit-scrollbar {
+        height: 4px;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <!-- Navigation -->
+    <nav
+      class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-wrap justify-between h-auto py-2 md:h-16 items-center"
+        >
+          <div class="flex-shrink-0 flex items-center py-2">
+            <span
+              class="text-base md:text-lg font-bold tracking-widest text-stone-900 uppercase font-sans"
+              >The Universe</span
+            >
+          </div>
+          <div
+            class="flex overflow-x-auto space-x-2 md:space-x-4 no-scrollbar pb-1 md:pb-0"
+          >
+            <button
+              onclick="scrollToSection('abstract')"
+              class="whitespace-nowrap text-stone-500 hover:text-orange-600 px-2 py-1 text-xs md:text-sm font-medium transition-colors"
+            >
+              Abstract
+            </button>
+            <button
+              onclick="scrollToSection('theory')"
+              class="whitespace-nowrap text-stone-500 hover:text-orange-600 px-2 py-1 text-xs md:text-sm font-medium transition-colors"
+            >
+              Metric
+            </button>
+            <button
+              onclick="scrollToSection('advanced')"
+              class="whitespace-nowrap text-stone-500 hover:text-orange-600 px-2 py-1 text-xs md:text-sm font-medium transition-colors"
+            >
+              Frameworks
+            </button>
+            <button
+              onclick="scrollToSection('geometry')"
+              class="whitespace-nowrap text-stone-500 hover:text-orange-600 px-2 py-1 text-xs md:text-sm font-medium transition-colors"
+            >
+              3D
+            </button>
+            <button
+              onclick="scrollToSection('stability')"
+              class="whitespace-nowrap text-stone-500 hover:text-orange-600 px-2 py-1 text-xs md:text-sm font-medium transition-colors"
+            >
+              Stability
+            </button>
+            <button
+              onclick="scrollToSection('verdict')"
+              class="whitespace-nowrap text-stone-500 hover:text-orange-600 px-2 py-1 text-xs md:text-sm font-medium transition-colors"
+            >
+              Verdict
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header / Hero -->
+    <header class="bg-white border-b border-stone-200 py-10 sm:py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h1
+          class="academic-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-stone-900 mb-4 md:mb-6 leading-tight"
+        >
+          Topological Bridges in General Relativity:
+          <br class="hidden sm:block" />
+          <span class="text-stone-800 italic"
+            >A Proof of the Existence of Wormholes</span
+          >
+        </h1>
+        <p
+          class="text-lg md:text-xl text-stone-600 mb-6 md:mb-8 font-light tracking-wide italic"
+        >
+          Authored by
+          <span class="font-semibold text-stone-900 not-italic"
+            >Amit Pattanaik</span
+          >
+        </p>
+        <div class="flex justify-center flex-wrap gap-2 md:gap-3">
+          <span
+            class="inline-flex items-center px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-semibold bg-stone-100 text-stone-600 uppercase tracking-widest border border-stone-200"
+            >Engineering</span
+          >
+          <span
+            class="inline-flex items-center px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-semibold bg-stone-100 text-stone-600 uppercase tracking-widest border border-stone-200"
+            >Quantum Gravity</span
+          >
+          <span
+            class="inline-flex items-center px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-semibold bg-stone-100 text-stone-600 uppercase tracking-widest border border-stone-200"
+            >Topology</span
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <!-- Abstract Section -->
+      <section id="abstract" class="max-w-4xl mx-auto px-4 py-10 sm:py-16">
+        <h2
+          class="section-heading text-2xl md:text-3xl font-bold text-stone-900 mb-4 md:mb-6 flex items-center gap-3"
+        >
+          Abstract
+        </h2>
+        <p
+          class="text-lg md:text-xl text-stone-800 leading-relaxed mb-6 md:mb-8 academic-title sm:text-justify"
+        >
+          While traditionally viewed as exotic solutions to the field equations,
+          modern physics suggests that wormholes may be a fundamental necessity
+          for the consistency of the universe. This paper explores the
+          transition from classical Morris-Thorne bridges to quantum-mechanical
+          "replica wormholes." We demonstrate that the entanglement of matter
+          and the resolution of the black hole information paradox provide
+          compelling indirect proof that multiply connected spacetime manifolds
+          are a physical reality.
+        </p>
+        <div
+          class="bg-stone-50 p-6 sm:p-8 rounded-xl border border-stone-200 shadow-sm italic"
+        >
+          <h3
+            class="text-[10px] md:text-xs font-bold text-stone-400 uppercase tracking-widest mb-3"
+          >
+            Core Premise
+          </h3>
+          <p
+            class="text-lg md:text-xl text-stone-800 academic-title leading-snug"
+          >
+            "Spacetime is not a smooth sheet, but a dynamic, frothing network
+            where quantum entanglement and geometric connection are functionally
+            identical."
+          </p>
+          <p
+            class="text-right mt-4 text-xs md:text-sm font-sans font-semibold text-stone-500"
+          >
+            — A. Pattanaik
+          </p>
+        </div>
+      </section>
+
+      <!-- Theory Section -->
+      <section
+        id="theory"
+        class="bg-stone-50 py-10 sm:py-16 border-y border-stone-200"
+      >
+        <div class="max-w-4xl mx-auto px-4">
+          <h2
+            class="section-heading text-2xl md:text-3xl font-bold text-stone-900 mb-6 md:mb-8 border-b border-stone-200 pb-2"
+          >
+            1. The Mathematical Framework
+          </h2>
+          <p
+            class="text-stone-700 mb-6 md:mb-10 text-base md:text-lg leading-relaxed"
+          >
+            To prove the existence of a wormhole, we utilize a spherically
+            symmetric Lorentzian metric. The line element
+            <span class="math-font">ds²</span> describes a geometry where two
+            distant regions are joined by a central throat:
+          </p>
+
+          <div
+            class="bg-white p-6 sm:p-10 rounded-2xl shadow-sm border border-stone-200 text-center mb-8 md:mb-12 overflow-x-auto math-scroll"
+          >
+            <div class="inline-block text-left">
+              <p
+                class="text-xl md:text-3xl math-font text-stone-900 whitespace-nowrap py-4"
+              >
+                ds² = -e<sup>2Φ(r)</sup>dt² +
+                <span class="inline-block align-middle text-center mx-2">
+                  <span class="block border-b-2 border-stone-900">dr²</span>
+                  <span class="block">1 - b(r)/r</span>
+                </span>
+                + r²(dθ² + sin²θ dφ²)
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+            <div
+              class="bg-white p-6 rounded-xl border border-stone-100 shadow-sm"
+            >
+              <h3
+                class="font-bold text-stone-900 mb-3 uppercase text-[10px] tracking-widest"
+              >
+                Shape Function, b(r)
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Determines the spatial shape. At the throat radius
+                <span class="math-font">r₀</span>, the condition
+                <span class="math-font">b(r₀) = r₀</span> must hold to ensure
+                the bridge stays open.
+              </p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-xl border border-stone-100 shadow-sm"
+            >
+              <h3
+                class="font-bold text-stone-900 mb-3 uppercase text-[10px] tracking-widest"
+              >
+                Redshift Function, Φ(r)
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Determines the gravitational redshift. A finite
+                <span class="math-font">Φ(r)</span> ensures the absence of an
+                event horizon, allowing for two-way transit.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced Theoretical Frameworks -->
+      <section id="advanced" class="max-w-4xl mx-auto px-4 py-10 sm:py-20">
+        <h2
+          class="section-heading text-2xl md:text-3xl font-bold text-stone-900 mb-6 md:mb-8 border-l-4 border-orange-500 pl-4 md:pl-6"
+        >
+          2. Advanced Proofs & Paradoxes
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+          <!-- ER = EPR -->
+          <div
+            class="theory-card bg-stone-50 border border-stone-200 rounded-2xl p-6 md:p-8"
+          >
+            <h3
+              class="text-lg md:text-xl font-bold text-stone-900 mb-3 md:mb-4 academic-title"
+            >
+              The ER = EPR Conjecture
+            </h3>
+            <p class="text-sm md:text-base text-stone-700 leading-relaxed mb-4">
+              Proposed by Leonard Susskind and Juan Maldacena, this theory
+              suggests that Einstein-Rosen bridges (wormholes) and
+              Einstein-Podolsky-Rosen (quantum entanglement) are essentially the
+              same phenomenon.
+            </p>
+            <p
+              class="text-stone-600 italic border-l-2 border-stone-300 pl-4 text-xs md:text-sm"
+            >
+              If two particles are entangled, they are connected by a
+              microscopic wormhole.
+            </p>
+          </div>
+
+          <!-- Replica Wormholes -->
+          <div
+            class="theory-card bg-stone-50 border border-stone-200 rounded-2xl p-6 md:p-8"
+          >
+            <h3
+              class="text-lg md:text-xl font-bold text-stone-900 mb-3 md:mb-4 academic-title"
+            >
+              The Information Paradox
+            </h3>
+            <p class="text-sm md:text-base text-stone-700 leading-relaxed mb-4">
+              Recent calculations using the "Island Formula" suggest that the
+              radiation escaping a black hole is connected to its interior
+              through <strong>replica wormholes</strong>.
+            </p>
+            <p
+              class="text-stone-600 italic border-l-2 border-stone-300 pl-4 text-xs md:text-sm"
+            >
+              Mathematical necessity in saving quantum unitarity provides
+              indirect evidence for their existence.
+            </p>
+          </div>
+
+          <!-- Quantum Foam -->
+          <div
+            class="theory-card bg-stone-50 border border-stone-200 rounded-2xl p-6 md:p-8"
+          >
+            <h3
+              class="text-lg md:text-xl font-bold text-stone-900 mb-3 md:mb-4 academic-title"
+            >
+              Wheeler’s Quantum Foam
+            </h3>
+            <p class="text-sm md:text-base text-stone-700 leading-relaxed mb-4">
+              At the Planck scale, spacetime is turbulent. Tiny wormholes are
+              constantly popping into and out of existence as vacuum
+              fluctuations.
+            </p>
+            <p
+              class="text-stone-600 italic border-l-2 border-stone-300 pl-4 text-xs md:text-sm"
+            >
+              Wormholes are not cosmic anomalies, but the fundamental fabric of
+              spacetime.
+            </p>
+          </div>
+
+          <!-- Novikov Principle -->
+          <div
+            class="theory-card bg-stone-50 border border-stone-200 rounded-2xl p-6 md:p-8"
+          >
+            <h3
+              class="text-lg md:text-xl font-bold text-stone-900 mb-3 md:mb-4 academic-title"
+            >
+              The Novikov Principle
+            </h3>
+            <p class="text-sm md:text-base text-stone-700 leading-relaxed mb-4">
+              Resolves temporal paradoxes by stating that the universe only
+              allows for self-consistent timelines through wormhole structures.
+            </p>
+            <p
+              class="text-stone-600 italic border-l-2 border-stone-300 pl-4 text-xs md:text-sm"
+            >
+              Universe logic accommodates existence without discarding
+              causality.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3D Visualization Section -->
+      <section id="geometry" class="max-w-5xl mx-auto px-4 py-10 md:py-20">
+        <h2
+          class="section-heading text-2xl md:text-3xl font-bold text-stone-900 mb-4"
+        >
+          3. Visual Proof: The Embedding Diagram
+        </h2>
+        <p class="text-stone-600 mb-6 md:mb-10 text-base md:text-lg">
+          Visualizing the bridge connecting two asymptotically flat regions.
+        </p>
+
+        <!-- Control Panel -->
+        <div
+          class="bg-white p-4 sm:p-8 rounded-t-2xl border border-stone-200 border-b-0 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6"
+        >
+          <div class="text-left w-full">
+            <h3
+              class="font-bold text-stone-900 uppercase text-[10px] tracking-widest"
+            >
+              Geometric Parameters
+            </h3>
+            <p class="text-[10px] text-stone-400 mt-1">
+              Modulate the throat radius (r₀) to observe topology shifts.
+            </p>
+          </div>
+          <div class="flex items-center gap-4 md:gap-6 w-full md:w-auto">
+            <label
+              for="throatRadius"
+              class="text-xs md:text-sm font-semibold text-stone-600 whitespace-nowrap uppercase tracking-tighter"
+              >Throat Radius:</label
+            >
+            <input
+              type="range"
+              id="throatRadius"
+              min="0.5"
+              max="3"
+              step="0.1"
+              value="1.5"
+              class="w-full md:w-48 h-1.5 bg-stone-100 rounded-lg appearance-none cursor-pointer accent-stone-900"
+            />
+            <span
+              id="radiusValue"
+              class="text-xs md:text-sm font-mono bg-stone-900 text-white px-2 py-1 md:px-3 md:py-1 rounded-md"
+              >1.5</span
+            >
+          </div>
+        </div>
+
+        <!-- Plotly Chart Container -->
+        <div
+          class="chart-container bg-white border border-stone-200 rounded-b-2xl shadow-xl overflow-hidden"
+        >
+          <div id="wormhole3d"></div>
+        </div>
+      </section>
+
+      <!-- Stability Section -->
+      <section
+        id="stability"
+        class="bg-stone-900 py-12 md:py-20 border-t border-stone-800 text-stone-100"
+      >
+        <div class="max-w-4xl mx-auto px-4">
+          <h2
+            class="section-heading text-3xl md:text-4xl font-bold text-white mb-6 md:mb-8"
+          >
+            4. Stability & Energy Conditions
+          </h2>
+          <p class="text-stone-400 mb-8 md:mb-12 text-base md:text-lg">
+            Maintaining a stable bridge requires the local violation of the Null
+            Energy Condition (NEC).
+          </p>
+
+          <div
+            class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-10 items-start"
+          >
+            <div class="lg:col-span-1 space-y-6 md:space-y-8">
+              <div class="bg-stone-800 p-6 rounded-xl border border-stone-700">
+                <h4
+                  class="font-bold text-white mb-4 uppercase text-[10px] tracking-widest"
+                >
+                  The Flare-Out Condition
+                </h4>
+                <p
+                  class="text-xs md:text-sm text-stone-400 mb-4 leading-relaxed"
+                >
+                  Condition for throat to open:
+                </p>
+                <code
+                  class="block w-full bg-black/40 p-3 rounded text-orange-400 text-center mb-4 font-mono text-xs md:text-sm"
+                  >b'(r₀) < 1</code
+                >
+                <p class="text-[10px] md:text-xs text-stone-400 italic">
+                  Negative energy density (ρ < 0) localized at the throat.
+                </p>
+              </div>
+
+              <div class="bg-stone-100 p-6 rounded-xl text-stone-900 shadow-lg">
+                <h4
+                  class="font-bold mb-2 uppercase text-[10px] tracking-widest text-stone-400"
+                >
+                  Pattanaik's Theorem
+                </h4>
+                <p class="academic-title text-lg md:text-xl leading-snug">
+                  As r approaches infinity, the density ρ approaches 0, ensuring
+                  isolated topology.
+                </p>
+              </div>
+            </div>
+
+            <div class="lg:col-span-2 w-full overflow-hidden">
+              <div class="bg-white p-4 md:p-6 rounded-2xl shadow-2xl w-full">
+                <div class="h-64 sm:h-80 w-full">
+                  <canvas id="energyChart"></canvas>
+                </div>
+              </div>
+              <p
+                class="text-center text-[10px] text-stone-500 mt-4 font-medium uppercase tracking-widest"
+              >
+                Figure 2: Energy Density Distribution Curve
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Traversal Simulator -->
+      <section class="max-w-4xl mx-auto px-4 py-12 md:py-24">
+        <h2
+          class="section-heading text-2xl md:text-3xl font-bold text-stone-900 mb-6 md:mb-8"
+        >
+          5. Traversal Calculation
+        </h2>
+        <div
+          class="bg-white border border-stone-200 rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-sm"
+        >
+          <div class="mb-8 md:mb-10 text-center">
+            <h3
+              class="text-xl md:text-2xl font-bold text-stone-800 academic-title"
+            >
+              Relativistic Transit Comparison
+            </h3>
+            <p class="text-stone-500 text-xs md:text-sm">
+              Calculate temporal duration based on throat length vs. cosmic
+              distance.
+            </p>
+          </div>
+
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mb-8 md:mb-10"
+          >
+            <div>
+              <label
+                class="block text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-2 md:mb-3"
+                >Cosmic Distance (Ly)</label
+              >
+              <input
+                type="number"
+                id="distanceInput"
+                value="4.2"
+                step="0.1"
+                class="w-full bg-stone-50 border-b-2 border-stone-200 text-stone-900 text-2xl md:text-3xl p-3 md:p-4 outline-none focus:border-stone-900 transition-all academic-title"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-2 md:mb-3"
+                >Throat Physical Length (km)</label
+              >
+              <input
+                type="number"
+                id="throatLengthInput"
+                value="10"
+                step="1"
+                class="w-full bg-stone-50 border-b-2 border-stone-200 text-stone-900 text-2xl md:text-3xl p-3 md:p-4 outline-none focus:border-stone-900 transition-all academic-title"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row gap-4 md:gap-6">
+            <div
+              class="flex-1 bg-stone-50 p-4 md:p-6 rounded-xl md:rounded-2xl border border-stone-100"
+            >
+              <p
+                class="text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-2"
+              >
+                Standard Light-Transit
+              </p>
+              <p
+                id="lightTime"
+                class="text-xl md:text-3xl font-medium text-stone-600 academic-title"
+              >
+                4.2 Years
+              </p>
+            </div>
+            <div
+              class="flex-1 bg-stone-900 p-4 md:p-6 rounded-xl md:rounded-2xl border border-stone-800 shadow-xl"
+            >
+              <p
+                class="text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-2 text-stone-500"
+              >
+                Metric Shortcut Transit
+              </p>
+              <p
+                id="wormholeTime"
+                class="text-xl md:text-3xl font-bold text-white academic-title"
+              >
+                33.36 μs
+              </p>
+            </div>
+          </div>
+          <p class="mt-6 text-center text-[10px] text-stone-400 italic">
+            Traversal speed at c through the topological throat.
+          </p>
+        </div>
+      </section>
+
+      <!-- Final Verdict Section -->
+      <section
+        id="verdict"
+        class="max-w-4xl mx-auto px-4 py-12 md:py-20 border-t border-stone-200"
+      >
+        <h2
+          class="section-heading text-3xl md:text-4xl font-bold text-stone-900 mb-6 md:mb-8 text-center"
+        >
+          6. Final Verdict: The Inevitability of Wormholes
+        </h2>
+        <div
+          class="space-y-6 text-base md:text-lg text-stone-800 academic-title leading-relaxed sm:text-justify"
+        >
+          <p>
+            As demonstrated, the existence of wormholes is a mathematical
+            necessity for the preservation of modern physics. Acceptance of the
+            <strong>ER=EPR conjecture</strong> implies every instance of
+            entanglement is a microscopic wormhole.
+          </p>
+          <p>
+            From an <strong>Engineering</strong> perspective, replica wormholes
+            ensure information conservation. While macro-scale traversal is a
+            monumental challenge, the microscopic reality is woven into the
+            <strong>Quantum Foam</strong>.
+          </p>
+          <div
+            class="bg-stone-900 text-white p-6 md:p-8 rounded-2xl shadow-2xl mt-8"
+          >
+            <p class="text-lg md:text-2xl font-medium italic text-center">
+              "The universe does not merely permit wormholes; it is built upon
+              them. They are the topological infrastructure required for a
+              connected cosmos."
+            </p>
+            <p
+              class="text-right mt-6 text-[10px] md:text-xs font-sans font-bold text-orange-500 uppercase tracking-widest"
+            >
+              — Amit Pattanaik
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-white border-t border-stone-200 py-10 md:py-16">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <p
+          class="text-stone-500 text-xs md:text-sm mb-2 font-semibold tracking-wide"
+        >
+          &copy; 2026 AMIT PATTANAIK
+        </p>
+        <p class="text-stone-400 text-[10px] uppercase tracking-[0.2em]">
+          Department of Engineering &mdash; Topology Archive
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      function scrollToSection(id) {
+        const element = document.getElementById(id);
+        if (element) {
+          const navHeight = window.innerWidth < 768 ? 100 : 80;
+          window.scrollTo({
+            top: element.offsetTop - navHeight,
+            behavior: "smooth",
+          });
+        }
+      }
+
+      // --- 3D Visualization (Plotly) ---
+      let throatRadius = 1.5;
+
+      function generateWormholeData(r0) {
+        const x_vals = [];
+        const y_vals = [];
+        const z_vals = [];
+
+        const stepsR = 30; // Slightly reduced for performance on mobile
+        const stepsTheta = 35;
+        const maxR = r0 * 3.8;
+
+        for (let i = 0; i <= stepsR; i++) {
+          let r = r0 + (maxR - r0) * (i / stepsR);
+          for (let j = 0; j <= stepsTheta; j++) {
+            let theta = 2 * Math.PI * (j / stepsTheta);
+
+            let term = r / r0;
+            if (term < 1) term = 1;
+            let z_positive = r0 * Math.acosh(term);
+
+            x_vals.push(r * Math.cos(theta));
+            y_vals.push(r * Math.sin(theta));
+            z_vals.push(z_positive);
+
+            x_vals.push(r * Math.cos(theta));
+            y_vals.push(r * Math.sin(theta));
+            z_vals.push(-z_positive);
+          }
+        }
+
+        return { x: x_vals, y: y_vals, z: z_vals };
+      }
+
+      function initPlot() {
+        const coords = generateWormholeData(throatRadius);
+        const data = [
+          {
+            type: "mesh3d",
+            x: coords.x,
+            y: coords.y,
+            z: coords.z,
+            opacity: 0.9,
+            colorscale: [
+              [0, "#1c1917"],
+              [0.3, "#ea580c"],
+              [1, "#f5f5f4"],
+            ],
+            intensity: coords.z.map((z) => Math.abs(z)),
+            showscale: false,
+            lighting: {
+              ambient: 0.6,
+              diffuse: 0.8,
+              specular: 0.3,
+              roughness: 0.4,
+            },
+          },
+        ];
+
+        const layout = {
+          paper_bgcolor: "rgba(0,0,0,0)",
+          plot_bgcolor: "rgba(0,0,0,0)",
+          margin: { l: 0, r: 0, b: 0, t: 0 },
+          scene: {
+            xaxis: { visible: false },
+            yaxis: { visible: false },
+            zaxis: {
+              showgrid: true,
+              gridcolor: "#e7e5e4",
+              zeroline: false,
+              showbackground: false,
+              title: "",
+            },
+            camera: {
+              eye:
+                window.innerWidth < 768
+                  ? { x: 2.0, y: 2.0, z: 1.5 }
+                  : { x: 1.4, y: 1.4, z: 1.0 },
+            },
+          },
+        };
+
+        Plotly.newPlot("wormhole3d", data, layout, {
+          responsive: true,
+          displayModeBar: false,
+        });
+      }
+
+      const slider = document.getElementById("throatRadius");
+      const displayVal = document.getElementById("radiusValue");
+
+      slider.addEventListener("input", function () {
+        throatRadius = parseFloat(this.value);
+        displayVal.textContent = throatRadius.toFixed(1);
+        const newData = generateWormholeData(throatRadius);
+        Plotly.react("wormhole3d", [
+          {
+            type: "mesh3d",
+            x: newData.x,
+            y: newData.y,
+            z: newData.z,
+            opacity: 0.9,
+            colorscale: [
+              [0, "#1c1917"],
+              [0.3, "#ea580c"],
+              [1, "#f5f5f4"],
+            ],
+            intensity: newData.z.map((z) => Math.abs(z)),
+            showscale: false,
+          },
+        ]);
+      });
+
+      // --- Energy Chart ---
+      function initChart() {
+        const ctx = document.getElementById("energyChart").getContext("2d");
+        const labels = [];
+        const dataPoints = [];
+
+        for (let r = 1; r <= 5; r += 0.1) {
+          labels.push(r.toFixed(1));
+          dataPoints.push(-1 / Math.pow(r, 2.5));
+        }
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Density (ρ)",
+                data: dataPoints,
+                borderColor: "#1c1917",
+                backgroundColor: "rgba(28, 25, 23, 0.05)",
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "RADIAL COORDINATE (r)",
+                  font: { weight: "bold", size: 9 },
+                },
+                grid: { display: false },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "DENSITY",
+                  font: { weight: "bold", size: 9 },
+                },
+                suggestedMin: -1.2,
+                suggestedMax: 0.2,
+              },
+            },
+            plugins: {
+              legend: { display: false },
+            },
+          },
+        });
+      }
+
+      // --- Calculator Logic ---
+      const distInput = document.getElementById("distanceInput");
+      const throatInput = document.getElementById("throatLengthInput");
+      const lightOutput = document.getElementById("lightTime");
+      const wormOutput = document.getElementById("wormholeTime");
+
+      function updateCalculation() {
+        const distLy = parseFloat(distInput.value) || 0;
+        const throatKm = parseFloat(throatInput.value) || 0;
+
+        if (distLy === 0) {
+          lightOutput.innerText = "0 s";
+        } else if (distLy < 0.0001) {
+          const days = distLy * 365.25;
+          lightOutput.innerText = `${days.toFixed(2)} Days`;
+        } else {
+          lightOutput.innerText = `${distLy.toLocaleString()} Years`;
+        }
+
+        const c = 299792.458; // km/s
+        const timeSeconds = throatKm / c;
+
+        if (timeSeconds === 0) {
+          wormOutput.innerText = "0 s";
+        } else if (timeSeconds < 0.001) {
+          wormOutput.innerText = `${(timeSeconds * 1000000).toFixed(2)} μs`;
+        } else if (timeSeconds < 1) {
+          wormOutput.innerText = `${(timeSeconds * 1000).toFixed(2)} ms`;
+        } else {
+          wormOutput.innerText = `${timeSeconds.toFixed(4)} s`;
+        }
+      }
+
+      distInput.addEventListener("input", updateCalculation);
+      throatInput.addEventListener("input", updateCalculation);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        initPlot();
+        initChart();
+        updateCalculation();
+      });
+
+      window.addEventListener("resize", () => {
+        Plotly.Plots.resize("wormhole3d");
+      });
+    </script>
+  </body>
+</html>
